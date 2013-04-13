@@ -173,6 +173,9 @@ public class AlarmKlaxon extends Service {
             mHandler.obtainMessage(FOCUSCHANGE, focusChange, 0).sendToTarget();
         }
     };
+    
+    
+    
     private void play(Alarm alarm) {
         // stop() checks to see if we are already playing.
         mAudioManager.requestAudioFocus(mAudioFocusListener, AudioManager.STREAM_ALARM,
@@ -182,7 +185,12 @@ public class AlarmKlaxon extends Service {
         Log.v("FourInLove", "AlarmKlaxon.play() " + alarm.id + " alert " + alarm.alert);
 
         if (!alarm.silent) {
+            //Uri alert = alarm.alert;
+            //Get alert from the server
+            InfoPackList mInfoPackList = InfoPackList.getInstance();
+            InfoPack info = mInfoPackList.getLatest();
             Uri alert = alarm.alert;
+            
             // Fall back on the default alarm if the database does not have an
             // alarm stored.
             if (alert == null) {
@@ -193,7 +201,6 @@ public class AlarmKlaxon extends Service {
 
             // TODO: Reuse mMediaPlayer instead of creating a new one and/or use
             // RingtoneManager.
-            mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setOnErrorListener(new OnErrorListener() {
                 public boolean onError(MediaPlayer mp, int what, int extra) {
                     Log.v("FourInLove", "Error occurred while playing audio.");
